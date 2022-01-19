@@ -7,95 +7,94 @@ using Newtonsoft.Json.Serialization;
 using Zalando.Models.Guerilla;
 using Zalando.Models.Guerrilla;
 
-namespace Zalando.Clients
+namespace Zalando.Clients;
+
+public class guerrillaClient
 {
-    public class guerrillaClient
+    private HttpClient Client { get; set; }
+
+    private readonly JsonSerializerSettings _jsonSettings;
+
+    public guerrillaClient()
     {
-        private HttpClient Client { get; set; }
-
-        private readonly JsonSerializerSettings _jsonSettings;
-
-        public guerrillaClient()
-        {
-            Client = new HttpClient {BaseAddress = new Uri("https://api.guerrillamail.com/ajax.php")};
+        Client = new HttpClient {BaseAddress = new Uri("https://api.guerrillamail.com/ajax.php")};
             
-            _jsonSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.None,
-                ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()}
-            };
-        }
-
-        public async Task<Email> GetEmailAddressAsync()
+        _jsonSettings = new JsonSerializerSettings
         {
-            const string url = "?f=get_email_address";
+            Formatting = Formatting.None,
+            ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()}
+        };
+    }
 
-            var response = await Client.GetAsync(url);
+    public async Task<Email> GetEmailAddressAsync()
+    {
+        const string url = "?f=get_email_address";
 
-            response.EnsureSuccessStatusCode();
+        using var response = await Client.GetAsync(url);
 
-            var content = await response.Content.ReadAsStringAsync();
+        response.EnsureSuccessStatusCode();
 
-            var email = JsonConvert.DeserializeObject<Email>(content, _jsonSettings);
+        var content = await response.Content.ReadAsStringAsync();
 
-            // initialize mailbox.
-            await Client.GetAsync($"?f=get_email_list&sid_token={email?.SidToken}&offset=0");
+        var email = JsonConvert.DeserializeObject<Email>(content, _jsonSettings);
 
-            return email;
-        }
+        // initialize mailbox.
+        await Client.GetAsync($"?f=get_email_list&sid_token={email?.SidToken}&offset=0");
 
-        public async Task<Inbox> GetEmailInboxAsync(string sidToken)
-        {
-            var url = $"?f=check_email&sid_token={sidToken}&seq=0";
+        return email;
+    }
 
-            var response = await Client.GetAsync(url);
+    public async Task<Inbox> GetEmailInboxAsync(string sidToken)
+    {
+        var url = $"?f=check_email&sid_token={sidToken}&seq=0";
 
-            response.EnsureSuccessStatusCode();
+        using var response = await Client.GetAsync(url);
 
-            var content = await response.Content.ReadAsStringAsync();
+        response.EnsureSuccessStatusCode();
 
-            var inbox = JsonConvert.DeserializeObject<Inbox>(content, _jsonSettings);
+        var content = await response.Content.ReadAsStringAsync();
 
-            return inbox;
-        }
+        var inbox = JsonConvert.DeserializeObject<Inbox>(content, _jsonSettings);
+
+        return inbox;
+    }
 
 
-        public async Task<FetchEmail> FetchEmailAsync(string sidToken, string emailId)
-        {
-            var url = $"?f=fetch_email&sid_token={sidToken}&email_id={emailId}";
+    public async Task<FetchEmail> FetchEmailAsync(string sidToken, string emailId)
+    {
+        var url = $"?f=fetch_email&sid_token={sidToken}&email_id={emailId}";
 
-            var response = await Client.GetAsync(url);
+        using var response = await Client.GetAsync(url);
 
-            response.EnsureSuccessStatusCode();
+        response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync();
 
-            var inbox = JsonConvert.DeserializeObject<FetchEmail>(content, _jsonSettings);
+        var inbox = JsonConvert.DeserializeObject<FetchEmail>(content, _jsonSettings);
 
-            return inbox;
-        }
+        return inbox;
+    }
 
-        public async Task<Message> WaitForMessageFromAsync(string sidToken, string sender)
-        {
-            const int maxTries = 20;
+    public async Task<Message> WaitForMessageFromAsync(string sidToken, string sender)
+    {
+        const int maxTries = 20;
             
-            for (var i = 0; i < maxTries; i++)
-            {
-                await Task.Delay(5000);
+        for (var i = 0; i < maxTries; i++)
+        {
+            await Task.Delay(5000);
 
-                Console.Write($"\rChecking email... [{i+1}/{maxTries}]  ");
+            Console.Write($"\rChecking email... [{i+1}/{maxTries}]  ");
 
-                var inbox = await GetEmailInboxAsync(sidToken);
+            var inbox = await GetEmailInboxAsync(sidToken);
                 
-                var zalandoMail = inbox.List.FirstOrDefault(x => x.MailFrom.Contains(sender));
+            var zalandoMail = inbox.List.FirstOrDefault(x => x.MailFrom.Contains(sender));
 
-                if (zalandoMail != null)
-                {
-                    return zalandoMail;
-                }
+            if (zalandoMail != null)
+            {
+                return zalandoMail;
             }
-            
-            return null;
         }
+            
+        return null;
     }
 }
