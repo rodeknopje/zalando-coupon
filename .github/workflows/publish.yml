@@ -27,4 +27,4 @@ jobs:
         prerelease: false
         automatic_release_tag: "latest"
         files: |
-          ./ZalandoCoupon.Application/bin/Release/Windows/ZalandoCoupon.Application.exe
+          ./bin/Release/Windows/ZalandoCoupon.Application.exe
