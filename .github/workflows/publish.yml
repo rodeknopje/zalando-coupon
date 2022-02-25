@@ -3,8 +3,6 @@ name: .NET
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -13,10 +11,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
+        
     - name: Publish
       run: dotnet publish -p:PublishSingleFile=true -r win-x64 -c Release --self-contained -p:PublishTrimmed=true -p:PublishReadyToRun=true -o bin/Release/Windows
     
@@ -25,6 +25,6 @@ jobs:
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: false
-        automatic_release_tag: "${{ steps.date.outputs.date }}"
+        automatic_release_tag: "latest"
         files: |
           ./ZalandoCoupon.Application/bin/Release/Windows/ZalandoCoupon.Application.exe
