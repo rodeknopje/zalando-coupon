@@ -1,0 +1,30 @@
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Publish
+      run: dotnet publish -p:PublishSingleFile=true -r win-x64 -c Release --self-contained -p:PublishTrimmed=true -p:PublishReadyToRun=true -o bin/Release/Windows
+    
+    - name: Deploy
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
+        automatic_release_tag: "${{ steps.date.outputs.date }}"
+        files: |
+          ./ZalandoCoupon.Application/bin/Release/Windows/ZalandoCoupon.Application.exe
