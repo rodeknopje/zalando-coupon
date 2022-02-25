@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZalandoCoupon.Application", "ZalandoCoupon.Application\ZalandoCoupon.Application.csproj", "{EF6826EC-B558-4EE7-BBCE-97B735DD4FCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF6826EC-B558-4EE7-BBCE-97B735DD4FCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF6826EC-B558-4EE7-BBCE-97B735DD4FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF6826EC-B558-4EE7-BBCE-97B735DD4FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF6826EC-B558-4EE7-BBCE-97B735DD4FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
