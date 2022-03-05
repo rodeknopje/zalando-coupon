@@ -23,9 +23,9 @@ jobs:
        dotnet publish -p:PublishSingleFile=true -r linux-x64 -c Release --self-contained -p:PublishTrimmed=true -p:PublishReadyToRun=true -o bin/Release/Linux
        dotnet publish -p:PublishSingleFile=true -r osx-x64 -c Release --self-contained -p:PublishTrimmed=true -p:PublishReadyToRun=true -o bin/Release/Mac
 
-       mv ./bin/Release/Windows/ZalandoCoupon.Application.exe ./bin/Release/Windows/Zalandocoupon.exe
-       mv ./bin/Release/Linux/ZalandoCoupon.Application ./bin/Release/Linux/Zalandocoupon
-       mv ./bin/Release/Mac/ZalandoCoupon.Application ./bin/Release/Mac/Zalandocoupon
+       mv ./bin/Release/Windows/ZalandoCoupon.Application.exe ./bin/Release/Windows/ZalandoCoupon.exe
+       mv ./bin/Release/Linux/ZalandoCoupon.Application ./bin/Release/Linux/ZalandoCoupon-linux
+       mv ./bin/Release/Mac/ZalandoCoupon.Application ./bin/Release/Mac/ZalandoCoupon-mac
 
     - name: Deploy
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -34,6 +34,6 @@ jobs:
         prerelease: false
         automatic_release_tag: "latest"
         files: |
-          ./bin/Release/Windows
-          ./bin/Release/Linux
-          ./bin/Release/Mac
+          ./bin/Release/Windows/ZalandoCoupon.exe
+          ./bin/Release/Linux/ZalandoCoupon-linux
+          ./bin/Release/Mac/ZalandoCoupon-mac
