@@ -18,7 +18,10 @@ jobs:
         dotnet-version: 6.0.x
         
     - name: Publish
-      run: dotnet publish -p:PublishSingleFile=true -r win-x64 -c Release --self-contained -p:PublishTrimmed=true -p:PublishReadyToRun=true -o bin/Release/Windows
+      run: |
+       dotnet publish -p:PublishSingleFile=true -r win-x64 -c Release --self-contained -p:PublishTrimmed=true -p:PublishReadyToRun=true -o bin/Release/Windows
+       cd ./bin/Release/Windows
+       mv ZalandoCoupon.Application.exe Zalandocoupon.exe
     
     - name: Deploy
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -27,4 +30,4 @@ jobs:
         prerelease: false
         automatic_release_tag: "latest"
         files: |
-          ./bin/Release/Windows/ZalandoCoupon.Application.exe
+          ./bin/Release/Windows/Zalandocoupon.exe
