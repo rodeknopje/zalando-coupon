@@ -10,4 +10,8 @@
         
         
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="mailslurp" Version="15.9.0" />
+    </ItemGroup>
 </Project>
